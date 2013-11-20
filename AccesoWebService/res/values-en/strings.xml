@@ -34,4 +34,8 @@
     <string name="server_password_summary" >User\'s password to use for the connection</string>
     
     
+    <string name="progress_title" >Connecting...</string>
+    <string name="errorHTTP" >Couldn\'t Connect to the WebService. Set up the connection.</string>
+    <string name="service_connected">Service Connected</string>
+    
 </resources>
