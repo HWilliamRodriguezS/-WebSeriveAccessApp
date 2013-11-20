@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Web Service Access</string>
+    <string name="app_prefs">Connectivity Data</string>
+    
+    <string name="configuration_settings">Configuration Settings</string>
+    <string name="web_service_operations">Web Service Operations</string>
+    <string name="DNI">DNI</string>
+    
+    <string name="search_button"></string>
+    <string name="add_button"></string>
+    <string name="edit_button"></string>
+    <string name="delete_button"></string>
+    
+    <string name="query_results">Results Query</string>
+    <string name="total_query_results">Total Query Results</string>
+    
+    <string name="name">Name</string>
+    <string name="last_name">Last Name </string>
+    <string name="address">Address </string>
+    <string name="tel">Telephone </string>
+    <string name="team">Team</string>
+    
+    <string name="add_record">Record Insertion</string>
+    <string name="modify_record">Record Modification</string>
+    <string name="delete_record">Record Deletion</string>
+    
+    <string name="server_url" >Server URL</string>
+    <string name="server_url_summary" >Server Address to be connected</string>
+    <string name="server_user" >Username</string>
+    <string name="server_user_summary" >Username to use for the connection</string>
+    <string name="server_password" >Password</string>
+    <string name="server_password_summary" >User\'s password to use for the connection</string>
+    
+    
+</resources>
