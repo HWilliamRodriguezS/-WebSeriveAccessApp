@@ -47,28 +47,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_media_previous"
-            android:hint="@string/search_button" />
+            android:hint="@string/search_button"
+            android:onClick="firstRecord" />
 
         <Button
             android:id="@+id/previous_nav_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_media_rew"
-            android:hint="@string/add_button" />
+            android:hint="@string/add_button"
+            android:onClick="previousRecord" />
 
         <Button
             android:id="@+id/next_nav_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_media_ff"
-            android:hint="@string/edit_button" />
+            android:hint="@string/edit_button" 
+            android:onClick="nextRecord"/>
 
         <Button
             android:id="@+id/last_nav_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_media_next"
-            android:hint="@string/delete_button" />
+            android:hint="@string/delete_button" 
+            android:onClick="lastRecord"/>
         
     </LinearLayout>
     

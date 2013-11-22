@@ -2,6 +2,8 @@ package com.hwrs88.accesowebservice;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpEntity;
@@ -28,239 +30,262 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements OnTaskCompleted {
 
-	Button search,add,modify,delete;
-	
-//	private final int MAIN_ACTIVITY  = 0;
-	private final int SEARCH_ACTIVITY  = 1;
-	private final int ADD_ACTIVITY     = 2;
-	private final int MODIFY_ACTIVITY  = 3;
-	private final int DELETE_ACTIVITY  = 4;
-	private final int PREFERENCES_ACTIVITY  = 5;
-	
+	Button search, add, modify, delete;
+
+	// private final int MAIN_ACTIVITY = 0;
+	private final int SEARCH_ACTIVITY = 1;
+	private final int ADD_ACTIVITY = 2;
+	private final int MODIFY_ACTIVITY = 3;
+	private final int DELETE_ACTIVITY = 4;
+	private final int PREFERENCES_ACTIVITY = 5;
+
 	private ProgressDialog pDialog;
 	private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
-	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        
-        // search = (Button) findViewById(R.id.search_button);
-        // add = (Button) findViewById(R.id.add_button);
-        // modify = (Button) findViewById(R.id.edit_button);
-        // delete = (Button) findViewById(R.id.delete_button);
-       // url_query = "http://demo.calamar.eui.upm.es/webservice/webService.query.php";
-        this.conectar(null);
-        
-    }
+	private WSManager wsConection;
+	private WSActions wsAction;
+//	private View callerButton;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-    
-    @Override
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);
+
+		// search = (Button) findViewById(R.id.search_button);
+		// add = (Button) findViewById(R.id.add_button);
+		// modify = (Button) findViewById(R.id.edit_button);
+		// delete = (Button) findViewById(R.id.delete_button);
+		// url_query =
+		// "http://demo.calamar.eui.upm.es/webservice/webService.query.php";
+
+		this.wsAction = WSActions.CONNECTION;
+		this.callWS(null);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.home, menu);
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-    	
-    	switch(item.getItemId()){
-    	case R.id.configuration_settings :
-    		openPreferencessActivity((View) item);
-    		break;
-    	}
-    	
+
+		switch (item.getItemId()) {
+		case R.id.configuration_settings:
+			openPreferencessActivity((View) item);
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
-    
-    public void openPreferencessActivity(View v){
-    	Intent i = new Intent(this, Prefs.class);
-   		startActivityForResult(i,PREFERENCES_ACTIVITY);
-    	
-    }
 
+	public void openPreferencessActivity(View v) {
+		Log.w("", "View ID : " + v.getId());
+		// this.wsAction = WSActions.SEARCH;
+		callWS(v);
+		
+//		Intent i = new Intent(this, Prefs.class);
+//		startActivityForResult(i, PREFERENCES_ACTIVITY);
 
-	public void openAddActivity(View v){
-    	
-    	Intent i = new Intent(this, AddActivity.class);
-   		startActivityForResult(i,ADD_ACTIVITY);
-    	
-    }
-    
-    public void openModifyActivity(View v){
-    	
-    	Intent i = new Intent(this, ModifyActivity.class);
-   		startActivityForResult(i,MODIFY_ACTIVITY);
-    	
-    }
-    
-    public void openSearchActivity(View v){
-    	
-    	Intent i = new Intent(this, SearchActivity.class);
-   		startActivityForResult(i,SEARCH_ACTIVITY);
-    	
-    }
-    
-    public void openDeleteActivity(View v){
-    	
-    	Intent i = new Intent(this, DeleteActivity.class);
-   		startActivityForResult(i,DELETE_ACTIVITY);
-    	
-    }
-   
-    //Webservice Mannage Connection
-    
-    public void conectar (View view){
-    	// env’o de informaci—n v’a par‡metros
-    	BasicNameValuePair nameValuePairs = new BasicNameValuePair("DNI","04864868");
-    	// env’o de informaci—n v’a entidad
-    	// String content = "[{\"DNI\":\"04864868\"}]";
-    	QueryDNI connection = new QueryDNI();
-//    	connetion.set
-//    	connection.execute(nameValuePairs);
-    	
-    	for(int i = 0;connection.getStatus() != AsyncTask.Status.FINISHED;i++){
-    		
-    		try {
-				Thread.sleep(1000);
-				
-				if(i >= 120){
-					new TimeoutException("Timeout HomeActivity");
-				}
-			} catch (InterruptedException e) {
+	}
+
+	public void openAddActivity(View v) {
+		
+		Log.w("", "View ID : " + v.getId());
+		// this.wsAction = WSActions.SEARCH;
+		callWS(v);
+//		Intent i = new Intent(this, AddActivity.class);
+//		startActivityForResult(i, ADD_ACTIVITY);
+
+	}
+
+	public void openModifyActivity(View v) {
+		
+		Log.w("", "View ID : " + v.getId());
+		// this.wsAction = WSActions.SEARCH;
+		callWS(v);
+//		Intent i = new Intent(this, ModifyActivity.class);
+//		startActivityForResult(i, MODIFY_ACTIVITY);
+
+	}
+
+	public void openSearchActivity(View v) {
+		v.getId();
+		Log.w("", "View ID : " + v.getId());
+		// this.wsAction = WSActions.SEARCH;
+		callWS(v);
+		// Intent i = new Intent(this, SearchActivity.class);
+		// startActivityForResult(i,SEARCH_ACTIVITY);
+
+	}
+
+	public void openDeleteActivity(View v) {
+
+		Log.w("", "View ID : " + v.getId());
+		// this.wsAction = WSActions.SEARCH;
+		callWS(v);
+		
+//		Intent i = new Intent(this, DeleteActivity.class);
+//		startActivityForResult(i, DELETE_ACTIVITY);
+
+	}
+
+	// Webservice Mannage Connection
+	public void callWS(View view) {
+
+		wsConection = new WSManager();
+		wsConection.setListener(this);
+		wsConection.setCurrentContext(HomeActivity.this);
+		wsConection.setUrlQuery(url_query);
+		wsConection.setProgressDialog(getString(R.string.progress_title));
+
+		if (view == null) {
+			
+			wsConection.setActionEnum(WSActions.CONNECTION);
+			wsConection.setWsMethod("webService.connect.php");
+			
+		} else if (view.getId() == R.id.search_button) {
+
+			this.wsAction = WSActions.SEARCH;
+			wsConection.setActionEnum(WSActions.SEARCH);
+			wsConection.setWsMethod("webService.query.php");
+
+		} else if (view.getId() == R.id.add_button) {
+
+			this.wsAction = WSActions.ADD;
+			wsConection.setActionEnum(WSActions.SEARCH);
+			wsConection.setWsMethod("webService.query.php");
+
+		} else if (view.getId() == R.id.edit_button) {
+
+			this.wsAction = WSActions.UPDATE;
+			wsConection.setActionEnum(WSActions.SEARCH);
+			wsConection.setWsMethod("webService.query.php");
+
+		} else if (view.getId() == R.id.delete_button) {
+
+			this.wsAction = WSActions.DELETE;
+			wsConection.setActionEnum(WSActions.SEARCH);
+			wsConection.setWsMethod("webService.query.php");
+
+		} else {
+			Log.w("", "View ID : " + getString(view.getId()));
+			wsConection.setActionEnum(WSActions.CONNECTION);
+			wsConection.setWsMethod("webService.connect.php");
+		}
+		
+		EditText etDni =  (EditText) findViewById(R.id.dni_search);
+		String dni = etDni.getText().toString();
+		
+		
+		if(dni == ""){
+			wsConection.execute();
+			
+		}else{
+			BasicNameValuePair nameValuePairs = new BasicNameValuePair("DNI",dni.toString());
+			wsConection.execute(nameValuePairs);	
+		}
+		
+	}
+
+	@Override
+	public void onTaskCompleted() {
+		// TODO Auto-generated method stub
+
+		JSONArray jarrayResponse = wsConection.getRecordsResult();
+		Intent i;
+		switch (wsAction) {
+		case CONNECTION:
+
+			if (wsConection.isConnected()) {
+
+				Toast.makeText(wsConection.getCurrentContext(),R.string.service_connected, Toast.LENGTH_LONG).show();
+				Log.w("", "Array : " + jarrayResponse.length());
+
+			} else {
+
+				Toast.makeText(wsConection.getCurrentContext(),
+						R.string.errorHTTP, Toast.LENGTH_LONG).show();
+				openPreferencessActivity(null);
+
+			}
+			break;
+
+		case SEARCH:
+			
+			JSONObject json_obj;
+			String str_value = "";
+			try {
+				json_obj = wsConection.getRecordsResult().getJSONObject(0);
+				str_value=json_obj.getString("NUMREG");
+			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		
-    		
-    	}
-    	
-//    	Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-    
-    
-    /**
-     * Background Async Task to Query 
-     * */
-    class QueryDNI extends AsyncTask <BasicNameValuePair, Void, HttpResponse> {
- 
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-    	
-    	private JSONArray recordsResult =  null;
-    	private boolean connection = false;
-    	private String wsMethod = null;
-    	private Context currentContext;
-    	
-    	
-    	public boolean getConnection(){
-    		
-    		return connection;
-    	}
-    	
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(HomeActivity.this);
-            pDialog.setMessage(getString(R.string.progress_title));
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
- 
-        /**
-         * Obtaining info
-         * */
-        protected HttpResponse doInBackground(BasicNameValuePair... params) {
-        	HttpResponse response = null;
-        	
-        	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.length);
-        	for(int i=0; i<params.length; i++){
-        		nameValuePairs.add(params[i]);
-        	}
-       	
-        	try{
-    	        //HttpClient httpclient = new DefaultHttpClient();
-    	        AndroidHttpClient httpclient = AndroidHttpClient.newInstance("AndroidHttpClient");
-    	        HttpPost httppost = new HttpPost(url_query+"webService.connect.php");
-    	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-    	        //httppost.setEntity(new StringEntity(content));
-    	        response = httpclient.execute(httppost);
-        	}catch(Exception e){
-    	        Log.e(getString(R.string.app_name), R.string.errorHTTP+": "+e.toString());
-        	}    	
-	        return response;
-        }
- 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        @Override
-        protected void onPostExecute(HttpResponse response) {
-        	String message = "";
-        	
-            // dismiss the dialog once done
-            pDialog.dismiss();
-            
-            int responseCode = response.getStatusLine().getStatusCode();
-            String responseMessage = response.getStatusLine().getReasonPhrase();
-            
-	        HttpEntity entity = response.getEntity();
-	        
-            if (entity != null) {
-            	//InputStream is = entity.getContent();
-                String responseString;
-				try {
-					responseString = EntityUtils.toString(entity);
-					message = responseString;
-					
-					JSONArray jarray = new JSONArray(message);
-					
-//					JSONObject json = new JSONObject(message);
-//					Log.w("Json ",json.toString());
-					
-				    JSONObject json_obj = jarray.getJSONObject(0);
-				    
-				    String str_value=json_obj.getString("NUMREG");
-				    
-				    if(Integer.parseInt(str_value) >= 0){
-				    	this.connection = true;
-				    }else{
-				    	this.connection = false;
-				    }
-				    
-				} 
-				catch (ParseException e) {}
-				catch (IOException e) {} 
-				catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		    
+		    
+		    
+		    if(Integer.parseInt(str_value) == 0){
+		    	Toast.makeText(HomeActivity.this, getString(R.string.query_noexist), Toast.LENGTH_LONG).show();
+		    }else{
+		    	Log.w("","results");
+		    	i = new Intent(this, SearchActivity.class);
+				i.putExtra("jarray",wsConection.getRecordsResult().toString());
+				startActivityForResult(i, SEARCH_ACTIVITY);
+		    }
+			
+			break;
+
+		case ADD:
+
+			i = new Intent(this, AddActivity.class);
+			startActivityForResult(i, ADD_ACTIVITY);
+			break;
+		
+		case UPDATE:
+
+			i = new Intent(this, ModifyActivity.class);
+			startActivityForResult(i, MODIFY_ACTIVITY);
+			break;
+		
+		case DELETE:
+
+			i = new Intent(this, DeleteActivity.class);
+			startActivityForResult(i, DELETE_ACTIVITY);
+
+			break;	
+	
+		default:
+			break;
+
+		}
+
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		switch (requestCode) {
+		case SEARCH_ACTIVITY:
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
 				}
-            } else {
-            	message = responseCode+": "+responseMessage;
-            	this.connection = false;
-            }
-            
-        	if(this.getConnection()){
-        		
-        		Toast.makeText(getApplicationContext(), R.string.service_connected , Toast.LENGTH_LONG).show();
-        		
-        	}else{
-        		
-        		Toast.makeText(getApplicationContext(), R.string.errorHTTP , Toast.LENGTH_LONG).show();
-        		openPreferencessActivity(null);
-        		
-        	}
-            
-        }
- 
-    }
-    
-    
+			}
+			
+			break;
+		
+		}
+		
+	}
+	
 }

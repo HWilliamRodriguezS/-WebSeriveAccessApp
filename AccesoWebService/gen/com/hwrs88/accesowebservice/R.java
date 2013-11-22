@@ -26,20 +26,21 @@ public final class R {
     }
     public static final class id {
         public static final int add_button=0x7f090000;
-        public static final int address=0x7f09000c;
-        public static final int configuration_settings=0x7f09000f;
+        public static final int address=0x7f09000d;
+        public static final int configuration_settings=0x7f090010;
         public static final int delete_button=0x7f090001;
-        public static final int dni=0x7f090002;
+        public static final int dni=0x7f09000a;
+        public static final int dni_search=0x7f090002;
         public static final int edit_button=0x7f090004;
         public static final int first_nav_button=0x7f090006;
-        public static final int last_name=0x7f09000b;
+        public static final int last_name=0x7f09000c;
         public static final int last_nav_button=0x7f090009;
-        public static final int name=0x7f09000a;
+        public static final int name=0x7f09000b;
         public static final int next_nav_button=0x7f090008;
         public static final int previous_nav_button=0x7f090007;
         public static final int search_button=0x7f090003;
-        public static final int team=0x7f09000e;
-        public static final int tel=0x7f09000d;
+        public static final int team=0x7f09000f;
+        public static final int tel=0x7f09000e;
         public static final int total_query_results=0x7f090005;
     }
     public static final class layout {
@@ -55,32 +56,36 @@ public final class R {
     }
     public static final class string {
         public static final int DNI=0x7f060004;
-        public static final int action_settings=0x7f06001c;
+        public static final int action_settings=0x7f060020;
         public static final int add_button=0x7f060006;
-        public static final int add_record=0x7f060010;
-        public static final int address=0x7f06000d;
+        public static final int add_record=0x7f060012;
+        public static final int address=0x7f06000f;
         public static final int app_name=0x7f060000;
         public static final int app_prefs=0x7f060001;
         public static final int configuration_settings=0x7f060002;
         public static final int delete_button=0x7f060008;
-        public static final int delete_record=0x7f060012;
+        public static final int delete_record=0x7f060014;
         public static final int edit_button=0x7f060007;
-        public static final int errorHTTP=0x7f06001a;
-        public static final int last_name=0x7f06000c;
-        public static final int modify_record=0x7f060011;
-        public static final int name=0x7f06000b;
-        public static final int progress_title=0x7f060019;
+        public static final int errorHTTP=0x7f06001c;
+        public static final int last_name=0x7f06000e;
+        public static final int modify_record=0x7f060013;
+        public static final int name=0x7f06000d;
+        public static final int of=0x7f06000c;
+        public static final int progress_title=0x7f06001b;
+        public static final int query_finished=0x7f06001e;
+        public static final int query_noexist=0x7f06001f;
         public static final int query_results=0x7f060009;
+        public static final int record=0x7f06000b;
         public static final int search_button=0x7f060005;
-        public static final int server_password=0x7f060017;
-        public static final int server_password_summary=0x7f060018;
-        public static final int server_url=0x7f060013;
-        public static final int server_url_summary=0x7f060014;
-        public static final int server_user=0x7f060015;
-        public static final int server_user_summary=0x7f060016;
-        public static final int service_connected=0x7f06001b;
-        public static final int team=0x7f06000f;
-        public static final int tel=0x7f06000e;
+        public static final int server_password=0x7f060019;
+        public static final int server_password_summary=0x7f06001a;
+        public static final int server_url=0x7f060015;
+        public static final int server_url_summary=0x7f060016;
+        public static final int server_user=0x7f060017;
+        public static final int server_user_summary=0x7f060018;
+        public static final int service_connected=0x7f06001d;
+        public static final int team=0x7f060011;
+        public static final int tel=0x7f060010;
         public static final int total_query_results=0x7f06000a;
         public static final int web_service_operations=0x7f060003;
     }

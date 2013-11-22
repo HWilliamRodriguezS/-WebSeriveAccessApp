@@ -33,7 +33,7 @@
                   android:paddingLeft="@dimen/activity_horizontal_margin"
     			  android:paddingRight="@dimen/activity_horizontal_margin" />
         
-        <EditText android:id="@+id/dni"
+        <EditText android:id="@+id/dni_search"
                   android:layout_width="210dp"
                   android:layout_height="wrap_content"
                   android:hint="@string/DNI" 

@@ -21,7 +21,8 @@
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
-                  android:hint="@string/DNI" />
+                  android:hint="@string/DNI" 
+                  android:focusable="false"/>
     </TableRow>
     
      <TableRow  android:layout_weight="4"
@@ -39,7 +40,7 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/name"
-                  />
+                  android:focusable="false" />
     </TableRow>
     
       <TableRow android:layout_weight="4"
@@ -50,14 +51,14 @@
             	  android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
-                  />
+                   />
         
         <EditText android:id="@+id/last_name"
             	  android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/last_name"
-                  />
+                  android:focusable="false" />
     </TableRow>
     
  	<TableRow android:layout_weight="4"
@@ -75,7 +76,7 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/address"
-                  />
+                  android:focusable="false" />
     </TableRow>   
 	
  	<TableRow android:layout_weight="4"
@@ -93,7 +94,7 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/tel"
-                  />
+                  android:focusable="false" />
     </TableRow>
     
  	<TableRow android:layout_weight="4"
@@ -111,7 +112,7 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/team"
-                  />
+                  android:focusable="false" />
     </TableRow>
  	
 </TableLayout>

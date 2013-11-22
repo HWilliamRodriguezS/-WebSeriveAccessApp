@@ -15,6 +15,8 @@
     
     <string name="query_results">Results Query</string>
     <string name="total_query_results">Total Query Results</string>
+    <string name="record">Record</string>
+    <string name="of">of</string>
     
     <string name="name">Name</string>
     <string name="last_name">Last Name </string>
@@ -34,8 +36,11 @@
     <string name="server_password_summary" >User\'s password to use for the connection</string>
     
     
-    <string name="progress_title" >Connecting...</string>
+    <string name="progress_title" >Connecting&#8230;</string>
     <string name="errorHTTP" >Couldn\'t Connect to the WebService. Set up the connection.</string>
     <string name="service_connected">Service Connected</string>
+    
+    <string name="query_finished" >Query Finished</string>
+    <string name="query_noexist" >Record doesn\'t exist.</string>
     
 </resources>

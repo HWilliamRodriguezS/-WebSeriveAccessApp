@@ -20,7 +20,7 @@ import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse> {
 	
@@ -32,6 +32,8 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 	private ProgressDialog pDialog=null; 
 	private String progressDialog = null;
 	private String urlQuery = null;
+	private OnTaskCompleted listener = null;
+//	private String message = null;
 	
 	
 	@Override
@@ -55,18 +57,19 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
    	
     	try{
 	        AndroidHttpClient httpclient = AndroidHttpClient.newInstance("AndroidHttpClient");
-	        HttpPost httppost = new HttpPost(urlQuery+"webService.connect.php");
+	        HttpPost httppost = new HttpPost(urlQuery+wsMethod);
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	        response = httpclient.execute(httppost);
+	        httpclient.close();
     	}catch(Exception e){
-	        Log.w("Error", R.string.errorHTTP+": "+e.toString());
+	        Log.w("Error", "Error connection"+": "+e.toString());
     	}    	
         return response;
 	}
 
 	@Override
 	protected void onPostExecute(HttpResponse response) {
-		super.onPostExecute(response);
+		//super.onPostExecute(response);
 		
 		String message = "";
     	
@@ -82,8 +85,13 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
         	//InputStream is = entity.getContent();
             String responseString;
 			try {
+				
+				
 				responseString = EntityUtils.toString(entity);
 				message = responseString;
+				
+				Log.w("","responseString : " + responseString);
+				Log.w("","responseString : " + message);
 				
 				JSONArray jarray = new JSONArray(message);
 				
@@ -93,6 +101,8 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 			    JSONObject json_obj = jarray.getJSONObject(0);
 			    
 			    String str_value=json_obj.getString("NUMREG");
+			    
+			    setRecordsResult(jarray);
 			    
 			    if(Integer.parseInt(str_value) >= 0){
 			    	this.connected = true;
@@ -112,15 +122,17 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
         	this.connected = false;
         }
         
-    	if(this.isConnected()){
-    		
-    		Toast.makeText(currentContext, R.string.service_connected , Toast.LENGTH_LONG).show();
-    		
-    	}else{
-    		
-    		Toast.makeText(currentContext, R.string.errorHTTP , Toast.LENGTH_LONG).show();
-    		
-    	}
+//    	if(this.isConnected()){
+//    		
+//   		Toast.makeText(currentContext, R.string.service_connected , Toast.LENGTH_LONG).show();
+//    		
+//    	}else{
+//    		
+//    		Toast.makeText(currentContext, R.string.errorHTTP , Toast.LENGTH_LONG).show();
+//    		
+//    	}
+    	
+    	listener.onTaskCompleted();
 		
 	}
 	
@@ -187,6 +199,14 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 
 	public void setActionEnum(WSActions actionEnum) {
 		this.actionEnum = actionEnum;
+	}
+
+	public OnTaskCompleted getListener() {
+		return listener;
+	}
+
+	public void setListener(OnTaskCompleted listener) {
+		this.listener = listener;
 	}
 		
 }
