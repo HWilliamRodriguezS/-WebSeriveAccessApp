@@ -45,4 +45,13 @@
     <string name="query_exists" >Record Exist.</string>
     <string name="dni_noempty">You should enter a DNI.</string>
     
+    <string name="query_updated" >Update Finished</string>
+    <string name="query_updated_cancel" >Updated Canceled</string>
+    
+    <string name="query_deleted" >Deletion Completed</string>
+    <string name="query_deleted_cancel" >Deletion Canceled</string>
+   	
+    <string name="query_inserted" >Insertion Completed</string>
+    <string name="query_inserted_cancel" >Insertion Canceled</string>
+    
 </resources>

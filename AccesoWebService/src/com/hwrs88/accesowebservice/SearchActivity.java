@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 //import android.widget.Toast;
 
@@ -33,7 +34,18 @@ public class SearchActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		if(jarray.length() == 2 ){
+			
+			LinearLayout ll = (LinearLayout) findViewById(R.id.controls_nav);
+			ll.setVisibility(4);
+			
+		}else{
+			LinearLayout ll = (LinearLayout) findViewById(R.id.controls_nav);
+			ll.setVisibility(0);
+			
+		}
+		
 		currentRecord = 1;
 		updateFields();
 

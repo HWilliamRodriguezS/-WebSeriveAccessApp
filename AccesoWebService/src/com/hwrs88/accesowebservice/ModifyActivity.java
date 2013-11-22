@@ -1,35 +1,46 @@
 package com.hwrs88.accesowebservice;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.R.color;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ModifyActivity extends Activity implements OnTaskCompleted {
 
 	JSONObject json = null;
-
+	
+	
+	private ProgressDialog pDialog;
+	private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
+	private WSManager wsConection;
+	private WSActions wsAction;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify);
 		updateFields();
+		
 	}
 
 	public void updateRecord(View v){
 
-		WSManager wsConection = new WSManager();
+		wsConection = new WSManager();
 		wsConection.setListener(this);
 		wsConection.setCurrentContext(ModifyActivity.this);
-		wsConection.setUrlQuery("http://miw29.calamar.eui.upm.es/webservice/");
+		wsConection.setUrlQuery(this.url_query);
 		wsConection.setProgressDialog(getString(R.string.progress_title));
 		wsConection.setActionEnum(WSActions.UPDATE);
 		wsConection.setWsMethod("webService.update.php");
@@ -60,7 +71,9 @@ public class ModifyActivity extends Activity implements OnTaskCompleted {
 
 		BasicNameValuePair arrNameValuePairs[] = { vdni, vname, vlastName,
 				vAddress, vTel, vTeam };
-
+		
+		Log.w("arrNameValuePairs",arrNameValuePairs.toString());
+		
 		wsConection.execute(arrNameValuePairs);
 
 	}
@@ -117,6 +130,61 @@ public class ModifyActivity extends Activity implements OnTaskCompleted {
 	public void onTaskCompleted() {
 		// TODO Auto-generated method stub
 		
+		Log.w("","actualizado : " + wsConection.getRecordsResult().toString());
+		
+		JSONArray jarrayResponse = wsConection.getRecordsResult();
+		Intent i;
+		JSONObject json_obj;
+		String str_value = "";
+		
+		switch (wsConection.getActionEnum()) {
+		case UPDATE:
+			try {
+				json_obj = wsConection.getRecordsResult().getJSONObject(0);
+				str_value=json_obj.getString("NUMREG");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    if(Integer.parseInt(str_value) >= 1){
+		    	
+				i = new Intent();
+				i.putExtra("resultMessage", getString(R.string.query_updated));
+		   		setResult(RESULT_OK, i);
+				super.onBackPressed();
+//		    	Toast.makeText(ModifyActivity.this, getString(R.string.query_updated), Toast.LENGTH_LONG).show();
+		    }else if(Integer.parseInt(str_value) == 0){
+		    	i = new Intent();
+				i.putExtra("resultMessage", getString(R.string.query_updated));
+		   		setResult(RESULT_OK, i);
+				super.onBackPressed();
+		    }else{
+//		    	i = new Intent(this, SearchActivity.class);
+//				i.putExtra("jarray",wsConection.getRecordsResult().toString());
+//				startActivityForResult(i, SEARCH_ACTIVITY);
+//		    	Toast.makeText(ModifyActivity.this,"Didnt work", Toast.LENGTH_LONG).show();
+		    	Log.w("","Update have gonne wrong...");
+		    }
+		    
+		    break;
+		default:
+			break;
+		
+		}
+		
+		
+		
 	}
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		Intent i = new Intent();
+		i.putExtra("resultMessage", getString(R.string.query_updated_cancel));
+		setResult(RESULT_CANCELED,i);
+		super.onBackPressed();
+	}
+	
 
 }

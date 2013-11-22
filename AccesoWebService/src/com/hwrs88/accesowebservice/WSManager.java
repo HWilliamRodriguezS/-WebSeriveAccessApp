@@ -52,10 +52,18 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 	@Override
 	protected HttpResponse doInBackground(BasicNameValuePair... params) {
 		HttpResponse response = null;
+		JSONObject jsonObj = new JSONObject();
     	
     	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.length);
     	for(int i=0; i<params.length; i++){
     		nameValuePairs.add(params[i]);
+    		NameValuePair localv = params[i];
+    		try {
+				jsonObj.put( params[i].getName() , params[i].getValue());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
    	
     	try{
@@ -64,9 +72,10 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
     		
     		case ADD:
     		case UPDATE:
+    			Log.w("","JSONobj : " + jsonObj.toString());
     			HttpClient httpclient = new DefaultHttpClient();
     	        HttpPost httppost = new HttpPost(urlQuery+wsMethod);
-    	        httppost.setEntity(new StringEntity(nameValuePairs.toString()));
+    	        httppost.setEntity(new StringEntity(jsonObj.toString()));
     	        response = httpclient.execute(httppost);
     			break;
     		
@@ -110,16 +119,13 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 				responseString = EntityUtils.toString(entity);
 				message = responseString;
 				
-				Log.w("","responseString : " + responseString);
-				Log.w("","responseString : " + message);
+//				Log.w("","responseString : " + responseString);
+//				Log.w("","responseString : " + message);
 				
 				JSONArray jarray = new JSONArray(message);
 				
-//				JSONObject json = new JSONObject(message);
-//				Log.w("Json ",json.toString());
-				
 			    JSONObject json_obj = jarray.getJSONObject(0);
-			    
+//			    Log.w("Json ",json_obj.toString());
 			    
 			    String str_value=json_obj.getString("NUMREG");
 			    

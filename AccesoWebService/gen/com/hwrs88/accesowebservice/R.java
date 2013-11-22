@@ -26,21 +26,22 @@ public final class R {
     }
     public static final class id {
         public static final int add_button=0x7f090000;
-        public static final int address=0x7f09000d;
-        public static final int configuration_settings=0x7f090010;
+        public static final int address=0x7f09000e;
+        public static final int configuration_settings=0x7f090011;
+        public static final int controls_nav=0x7f090006;
         public static final int delete_button=0x7f090001;
-        public static final int dni=0x7f09000a;
+        public static final int dni=0x7f09000b;
         public static final int dni_search=0x7f090002;
         public static final int edit_button=0x7f090004;
-        public static final int first_nav_button=0x7f090006;
-        public static final int last_name=0x7f09000c;
-        public static final int last_nav_button=0x7f090009;
-        public static final int name=0x7f09000b;
-        public static final int next_nav_button=0x7f090008;
-        public static final int previous_nav_button=0x7f090007;
+        public static final int first_nav_button=0x7f090007;
+        public static final int last_name=0x7f09000d;
+        public static final int last_nav_button=0x7f09000a;
+        public static final int name=0x7f09000c;
+        public static final int next_nav_button=0x7f090009;
+        public static final int previous_nav_button=0x7f090008;
         public static final int search_button=0x7f090003;
-        public static final int team=0x7f09000f;
-        public static final int tel=0x7f09000e;
+        public static final int team=0x7f090010;
+        public static final int tel=0x7f09000f;
         public static final int total_query_results=0x7f090005;
     }
     public static final class layout {
@@ -56,7 +57,7 @@ public final class R {
     }
     public static final class string {
         public static final int DNI=0x7f060004;
-        public static final int action_settings=0x7f060022;
+        public static final int action_settings=0x7f060028;
         public static final int add_button=0x7f060006;
         public static final int add_record=0x7f060012;
         public static final int address=0x7f06000f;
@@ -73,10 +74,16 @@ public final class R {
         public static final int name=0x7f06000d;
         public static final int of=0x7f06000c;
         public static final int progress_title=0x7f06001b;
+        public static final int query_deleted=0x7f060024;
+        public static final int query_deleted_cancel=0x7f060025;
         public static final int query_exists=0x7f060020;
         public static final int query_finished=0x7f06001e;
+        public static final int query_inserted=0x7f060026;
+        public static final int query_inserted_cancel=0x7f060027;
         public static final int query_noexist=0x7f06001f;
         public static final int query_results=0x7f060009;
+        public static final int query_updated=0x7f060022;
+        public static final int query_updated_cancel=0x7f060023;
         public static final int record=0x7f06000b;
         public static final int search_button=0x7f060005;
         public static final int server_password=0x7f060019;

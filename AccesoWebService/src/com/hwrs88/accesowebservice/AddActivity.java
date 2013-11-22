@@ -1,12 +1,26 @@
 package com.hwrs88.accesowebservice;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.R.color;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
 
- public class AddActivity extends Activity {
+ public class AddActivity extends Activity implements OnTaskCompleted {
+	 
+	 private ProgressDialog pDialog;
+		private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
+		private WSManager wsConection;
+		private WSActions wsAction;
 	 
 	 @Override
 	    protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +67,46 @@ import android.widget.EditText;
 			
 	}
 
-	public void createRecord(){
+	public void createRecord(View v){
 		
+		wsConection = new WSManager();
+		wsConection.setListener(this);
+		wsConection.setCurrentContext(AddActivity.this);
+		wsConection.setUrlQuery(this.url_query);
+		wsConection.setProgressDialog(getString(R.string.progress_title));
+		wsConection.setActionEnum(WSActions.UPDATE);
+		wsConection.setWsMethod("webService.insert.php");
+
 		EditText etDNI = (EditText) findViewById(R.id.dni);
-		
+		BasicNameValuePair vdni = new BasicNameValuePair("DNI", etDNI.getText()
+				.toString());
+
 		EditText etName = (EditText) findViewById(R.id.name);
-		
+		BasicNameValuePair vname = new BasicNameValuePair("Nombre", etName
+				.getText().toString());
+
 		EditText etlastName = (EditText) findViewById(R.id.last_name);
-		
+		BasicNameValuePair vlastName = new BasicNameValuePair("Apellidos",
+				etlastName.getText().toString());
+
 		EditText etAddress = (EditText) findViewById(R.id.address);
-		
+		BasicNameValuePair vAddress = new BasicNameValuePair("Direccion",
+				etAddress.getText().toString());
+
 		EditText etTel = (EditText) findViewById(R.id.tel);
-		
+		BasicNameValuePair vTel = new BasicNameValuePair("Telefono", etTel
+				.getText().toString());
+
 		EditText etTeam = (EditText) findViewById(R.id.team);
+		BasicNameValuePair vTeam = new BasicNameValuePair("Equipo", etTeam
+				.getText().toString());
+
+		BasicNameValuePair arrNameValuePairs[] = { vdni, vname, vlastName,
+				vAddress, vTel, vTeam };
+		
+		Log.w("arrNameValuePairs",arrNameValuePairs.toString());
+		
+		wsConection.execute(arrNameValuePairs);
 		
 	}
 
@@ -75,5 +116,63 @@ import android.widget.EditText;
 	        getMenuInflater().inflate(R.menu.home, menu);
 	        return true;
 	    }
+
+
+		@Override
+		public void onTaskCompleted() {
+			// TODO Auto-generated method stub
+			
+			JSONArray jarrayResponse = wsConection.getRecordsResult();
+			Intent i;
+			JSONObject json_obj;
+			String str_value = "";
+			
+			switch (wsConection.getActionEnum()) {
+			case UPDATE:
+				try {
+					json_obj = wsConection.getRecordsResult().getJSONObject(0);
+					str_value=json_obj.getString("NUMREG");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    
+			    if(Integer.parseInt(str_value) >= 1){
+			    	
+					i = new Intent();
+					i.putExtra("resultMessage", getString(R.string.query_inserted));
+			   		setResult(RESULT_OK, i);
+					super.onBackPressed();
+//			    	Toast.makeText(ModifyActivity.this, getString(R.string.query_updated), Toast.LENGTH_LONG).show();
+			    }else if(Integer.parseInt(str_value) == 0){
+			    	i = new Intent();
+					i.putExtra("resultMessage", getString(R.string.query_inserted));
+			   		setResult(RESULT_OK, i);
+					super.onBackPressed();
+			    }else{
+//			    	i = new Intent(this, SearchActivity.class);
+//					i.putExtra("jarray",wsConection.getRecordsResult().toString());
+//					startActivityForResult(i, SEARCH_ACTIVITY);
+//			    	Toast.makeText(ModifyActivity.this,"Didnt work", Toast.LENGTH_LONG).show();
+			    	Log.w("","n have gonne wrong...");
+			    }
+			    
+			    break;
+			default:
+				break;
+			
+			}
+			
+			
+		}
+		
+		@Override
+		public void onBackPressed() {
+			// TODO Auto-generated method stub
+			Intent i = new Intent();
+			i.putExtra("resultMessage", getString(R.string.query_inserted_cancel));
+			setResult(RESULT_CANCELED,i);
+			super.onBackPressed();
+		}
 	 
 }

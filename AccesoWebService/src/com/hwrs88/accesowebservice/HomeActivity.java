@@ -177,12 +177,24 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 			this.wsAction = WSActions.UPDATE;
 			wsConection.setActionEnum(WSActions.SEARCH);
 			wsConection.setWsMethod("webService.query.php");
+			
+			if(dni != null && dni.length() == 0){
+				Log.w("","dni_noempty");
+				Toast.makeText(HomeActivity.this, getString(R.string.dni_noempty), Toast.LENGTH_LONG).show();
+				return;
+			}
 
 		} else if (view.getId() == R.id.delete_button) {
 
 			this.wsAction = WSActions.DELETE;
 			wsConection.setActionEnum(WSActions.SEARCH);
 			wsConection.setWsMethod("webService.query.php");
+			
+			if(dni != null && dni.length() == 0){
+				Log.w("","dni_noempty");
+				Toast.makeText(HomeActivity.this, getString(R.string.dni_noempty), Toast.LENGTH_LONG).show();
+				return;
+			}
 
 		} else {
 			Log.w("", "View ID : " + getString(view.getId()));
@@ -354,7 +366,58 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 			}
 			
 			break;
+		case MODIFY_ACTIVITY:
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}else if (resultCode == RESULT_CANCELED) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}
+			
+			break;
 		
+		case ADD_ACTIVITY:
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}else if (resultCode == RESULT_CANCELED) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}
+			
+			break;	
+			
+			
+		case DELETE_ACTIVITY:
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}else if (resultCode == RESULT_CANCELED) {
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					String resultMessage = extras.getString("resultMessage");
+					Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show();
+				}
+			}
+			
+			break;
+			
 		}
 		
 	}
