@@ -7,8 +7,11 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -56,11 +59,28 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
     	}
    	
     	try{
-	        AndroidHttpClient httpclient = AndroidHttpClient.newInstance("AndroidHttpClient");
-	        HttpPost httppost = new HttpPost(urlQuery+wsMethod);
-	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	        response = httpclient.execute(httppost);
-	        httpclient.close();
+    		
+    		switch(actionEnum){
+    		
+    		case ADD:
+    		case UPDATE:
+    			HttpClient httpclient = new DefaultHttpClient();
+    	        HttpPost httppost = new HttpPost(urlQuery+wsMethod);
+    	        httppost.setEntity(new StringEntity(nameValuePairs.toString()));
+    	        response = httpclient.execute(httppost);
+    			break;
+    		
+    		default:
+    			AndroidHttpClient androidHttpclient = AndroidHttpClient.newInstance("AndroidHttpClient");
+    	        HttpPost androidHttppost = new HttpPost(urlQuery+wsMethod);
+    	        androidHttppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+    	        response = androidHttpclient.execute(androidHttppost);
+    	        androidHttpclient.close();
+    			break;
+    		
+    		}
+    		
+	        
     	}catch(Exception e){
 	        Log.w("Error", "Error connection"+": "+e.toString());
     	}    	
@@ -99,6 +119,7 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 //				Log.w("Json ",json.toString());
 				
 			    JSONObject json_obj = jarray.getJSONObject(0);
+			    
 			    
 			    String str_value=json_obj.getString("NUMREG");
 			    

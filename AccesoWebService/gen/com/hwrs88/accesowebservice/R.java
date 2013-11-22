@@ -56,7 +56,7 @@ public final class R {
     }
     public static final class string {
         public static final int DNI=0x7f060004;
-        public static final int action_settings=0x7f060020;
+        public static final int action_settings=0x7f060022;
         public static final int add_button=0x7f060006;
         public static final int add_record=0x7f060012;
         public static final int address=0x7f06000f;
@@ -65,6 +65,7 @@ public final class R {
         public static final int configuration_settings=0x7f060002;
         public static final int delete_button=0x7f060008;
         public static final int delete_record=0x7f060014;
+        public static final int dni_noempty=0x7f060021;
         public static final int edit_button=0x7f060007;
         public static final int errorHTTP=0x7f06001c;
         public static final int last_name=0x7f06000e;
@@ -72,6 +73,7 @@ public final class R {
         public static final int name=0x7f06000d;
         public static final int of=0x7f06000c;
         public static final int progress_title=0x7f06001b;
+        public static final int query_exists=0x7f060020;
         public static final int query_finished=0x7f06001e;
         public static final int query_noexist=0x7f06001f;
         public static final int query_results=0x7f060009;

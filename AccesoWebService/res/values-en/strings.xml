@@ -42,5 +42,7 @@
     
     <string name="query_finished" >Query Finished</string>
     <string name="query_noexist" >Record doesn\'t exist.</string>
+    <string name="query_exists" >Record Exist.</string>
+    <string name="dni_noempty">You should enter a DNI.</string>
     
 </resources>

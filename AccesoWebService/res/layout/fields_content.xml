@@ -21,7 +21,8 @@
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
-                  android:hint="@string/DNI" 
+                  android:hint="@string/DNI"
+                  android:inputType="number" 
                   android:focusable="false"/>
     </TableRow>
     
@@ -94,7 +95,8 @@
                   android:layout_height="wrap_content"
                   android:layout_weight="2.5"
                   android:hint="@string/tel"
-                  android:focusable="false" />
+                  android:focusable="false"
+                  android:inputType="phone" />
     </TableRow>
     
  	<TableRow android:layout_weight="4"

@@ -145,7 +145,10 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 		wsConection.setCurrentContext(HomeActivity.this);
 		wsConection.setUrlQuery(url_query);
 		wsConection.setProgressDialog(getString(R.string.progress_title));
-
+		
+		EditText etDni =  (EditText) findViewById(R.id.dni_search);
+		String dni = etDni.getText().toString();
+		
 		if (view == null) {
 			
 			wsConection.setActionEnum(WSActions.CONNECTION);
@@ -158,11 +161,17 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 			wsConection.setWsMethod("webService.query.php");
 
 		} else if (view.getId() == R.id.add_button) {
-
+			Log.w("","dni_noempty +'"+dni+"'");
 			this.wsAction = WSActions.ADD;
 			wsConection.setActionEnum(WSActions.SEARCH);
 			wsConection.setWsMethod("webService.query.php");
-
+			
+			if(dni != null && dni.length() == 0){
+				Log.w("","dni_noempty");
+				Toast.makeText(HomeActivity.this, getString(R.string.dni_noempty), Toast.LENGTH_LONG).show();
+				return;
+			}
+			
 		} else if (view.getId() == R.id.edit_button) {
 
 			this.wsAction = WSActions.UPDATE;
@@ -181,11 +190,8 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 			wsConection.setWsMethod("webService.connect.php");
 		}
 		
-		EditText etDni =  (EditText) findViewById(R.id.dni_search);
-		String dni = etDni.getText().toString();
-		
-		
-		if(dni == ""){
+		if(dni != null && dni.length() == 0){
+			Log.w("","wsConection.execute()");
 			wsConection.execute();
 			
 		}else{
@@ -201,6 +207,12 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 
 		JSONArray jarrayResponse = wsConection.getRecordsResult();
 		Intent i;
+		JSONObject json_obj;
+		String str_value = "";
+		
+		EditText etDni =  (EditText) findViewById(R.id.dni_search);
+		String dni = etDni.getText().toString();
+		
 		switch (wsAction) {
 		case CONNECTION:
 
@@ -220,8 +232,7 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 
 		case SEARCH:
 			
-			JSONObject json_obj;
-			String str_value = "";
+			
 			try {
 				json_obj = wsConection.getRecordsResult().getJSONObject(0);
 				str_value=json_obj.getString("NUMREG");
@@ -235,7 +246,6 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 		    if(Integer.parseInt(str_value) == 0){
 		    	Toast.makeText(HomeActivity.this, getString(R.string.query_noexist), Toast.LENGTH_LONG).show();
 		    }else{
-		    	Log.w("","results");
 		    	i = new Intent(this, SearchActivity.class);
 				i.putExtra("jarray",wsConection.getRecordsResult().toString());
 				startActivityForResult(i, SEARCH_ACTIVITY);
@@ -245,20 +255,81 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 
 		case ADD:
 
-			i = new Intent(this, AddActivity.class);
-			startActivityForResult(i, ADD_ACTIVITY);
+			try {
+				json_obj = wsConection.getRecordsResult().getJSONObject(0);
+				str_value=json_obj.getString("NUMREG");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    if(Integer.parseInt(str_value) == 0){
+		    	i = new Intent(this, AddActivity.class);
+				i.putExtra("DNI",dni);
+				startActivityForResult(i, ADD_ACTIVITY);
+		    }else{
+				
+				Toast.makeText(HomeActivity.this, getString(R.string.query_exists), Toast.LENGTH_LONG).show();
+		    }
+			
+			
 			break;
 		
 		case UPDATE:
+			
+			try {
+				json_obj = wsConection.getRecordsResult().getJSONObject(0);
+				str_value=json_obj.getString("NUMREG");
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    
+		    
+		    if(Integer.parseInt(str_value) == 0){
+		    	Toast.makeText(HomeActivity.this, getString(R.string.query_noexist), Toast.LENGTH_LONG).show();
+		    }else{
+		    	i = new Intent(this, ModifyActivity.class);
+				try {
+					i.putExtra("json",wsConection.getRecordsResult().getJSONObject(1).toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				startActivityForResult(i, MODIFY_ACTIVITY);
+		    }
 
-			i = new Intent(this, ModifyActivity.class);
-			startActivityForResult(i, MODIFY_ACTIVITY);
 			break;
 		
 		case DELETE:
-
-			i = new Intent(this, DeleteActivity.class);
-			startActivityForResult(i, DELETE_ACTIVITY);
+			
+			try {
+				json_obj = wsConection.getRecordsResult().getJSONObject(0);
+				str_value=json_obj.getString("NUMREG");
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    
+		    
+		    if(Integer.parseInt(str_value) == 0){
+		    	Toast.makeText(HomeActivity.this, getString(R.string.query_noexist), Toast.LENGTH_LONG).show();
+		    }else{
+		    	i = new Intent(this, DeleteActivity.class);
+				try {
+					i.putExtra("json",wsConection.getRecordsResult().getJSONObject(1).toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				startActivityForResult(i, DELETE_ACTIVITY);
+		    }
+			
+			
 
 			break;	
 	
