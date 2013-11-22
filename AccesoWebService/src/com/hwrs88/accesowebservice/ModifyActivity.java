@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ public class ModifyActivity extends Activity implements OnTaskCompleted {
 		updateFields();
 	}
 
-	public void updateRecord(){
+	public void updateRecord(View v){
 
 		WSManager wsConection = new WSManager();
 		wsConection.setListener(this);
