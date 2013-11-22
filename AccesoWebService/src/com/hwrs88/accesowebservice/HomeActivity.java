@@ -89,10 +89,10 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	public void openPreferencessActivity(View v) {
 		Log.w("", "View ID : " + v.getId());
 		// this.wsAction = WSActions.SEARCH;
-		callWS(v);
 		
-//		Intent i = new Intent(this, Prefs.class);
-//		startActivityForResult(i, PREFERENCES_ACTIVITY);
+		
+		Intent i = new Intent(this, Prefs.class);
+		startActivityForResult(i, PREFERENCES_ACTIVITY);
 
 	}
 
