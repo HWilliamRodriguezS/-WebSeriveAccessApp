@@ -76,10 +76,12 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-
+		
+		
+		
 		switch (item.getItemId()) {
 		case R.id.configuration_settings:
-			openPreferencessActivity((View) item);
+			openPreferencessActivity(null);
 			break;
 		}
 
@@ -87,7 +89,7 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	}
 
 	public void openPreferencessActivity(View v) {
-		Log.w("", "View ID : " + v.getId());
+		//Log.w("", "View ID : " + v.getId());
 		// this.wsAction = WSActions.SEARCH;
 		
 		
