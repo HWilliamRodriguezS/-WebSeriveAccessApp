@@ -6,10 +6,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.R.color;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -20,7 +22,7 @@ public class DeleteActivity extends Activity implements OnTaskCompleted {
 	private JSONObject json;
 	
 	private ProgressDialog pDialog;
-	private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
+	private static  String url_query ; // = "http://miw29.calamar.eui.upm.es/webservice/";
 	private WSManager wsConection;
 	private WSActions wsAction;
 	
@@ -28,6 +30,13 @@ public class DeleteActivity extends Activity implements OnTaskCompleted {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_delete);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		String server_url = prefs.getString("server_url", "");
+		String server_user = prefs.getString("server_user","");
+		String server_pass = prefs.getString("server_pass","");
+		url_query = server_url;
+		
 		updateFields();
 	}
 	

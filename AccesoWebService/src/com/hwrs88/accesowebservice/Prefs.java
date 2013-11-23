@@ -16,143 +16,108 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-public class Prefs extends PreferenceActivity {
-
+public class Prefs extends PreferenceActivity  implements OnTaskCompleted{
+	
+	private ProgressDialog pDialog;
+	private static String url_query ;
+	private WSManager wsConection;
+	private WSActions wsAction;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		String server_url = prefs.getString("server_url", "");
+		String server_user = prefs.getString("server_user","");
+		String server_pass = prefs.getString("server_pass","");
+		
+//		BasicNameValuePair vUser = new BasicNameValuePair("Equipo", etTeam
+//				.getText().toString());
+//
+//		BasicNameValuePair arrNameValuePairs[] = { vPass, vTeam };
+		
+//		Log.w("arrNameValuePairs",arrNameValuePairs.toString());
+		url_query = server_url;
 	}
 	
 	
-	private void openHomeActivity(View view) {
+	private void testConnection(View view) {
 		// TODO Auto-generated method stub
 		
-		
+
+		wsConection = new WSManager();
+		wsConection.setListener(this);
+		wsConection.setCurrentContext(Prefs.this);
+		wsConection.setUrlQuery(this.url_query);
+		wsConection.setProgressDialog(getString(R.string.progress_title));
+		this.wsAction = WSActions.CONNECTION;
+		wsConection.setActionEnum(WSActions.CONNECTION); 
+		wsConection.setWsMethod("webService.connect.php");
+		wsConection.execute();
 		
 	}
 	
-	class TestConnection extends AsyncTask <BasicNameValuePair, Void, HttpResponse> {
-		 
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-		private ProgressDialog pDialog;
-		private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
-    	
-    	private boolean connection = false;
-    	
-    	public boolean getConnection(){
-    		
-    		return connection;
-    	}
-    	
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(Prefs.this);
-            pDialog.setMessage(getString(R.string.progress_title));
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
- 
-        /**
-         * Obtaining info
-         * */
-        protected HttpResponse doInBackground(BasicNameValuePair... params) {
-        	HttpResponse response = null;
-        	
-        	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.length);
-        	for(int i=0; i<params.length; i++){
-        		nameValuePairs.add(params[i]);
-        	}
-       	
-        	try{
-    	        //HttpClient httpclient = new DefaultHttpClient();
-    	        AndroidHttpClient httpclient = AndroidHttpClient.newInstance("AndroidHttpClient");
-    	        HttpPost httppost = new HttpPost(url_query+"webService.connect.php");
-    	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-    	        //httppost.setEntity(new StringEntity(content));
-    	        response = httpclient.execute(httppost);
-        	}catch(Exception e){
-    	        Log.e(getString(R.string.app_name), R.string.errorHTTP+": "+e.toString());
-        	}    	
-	        return response;
-        }
- 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        @Override
-        protected void onPostExecute(HttpResponse response) {
-        	String message = "";
-        	
-            // dismiss the dialog once done
-            pDialog.dismiss();
-            
-            int responseCode = response.getStatusLine().getStatusCode();
-            String responseMessage = response.getStatusLine().getReasonPhrase();
-            
-	        HttpEntity entity = response.getEntity();
-	        
-            if (entity != null) {
-            	//InputStream is = entity.getContent();
-                String responseString;
-				try {
-					responseString = EntityUtils.toString(entity);
-					message = responseString;
-					
-					JSONArray jarray = new JSONArray(message);
-					
-//					JSONObject json = new JSONObject(message);
-//					Log.w("Json ",json.toString());
-					
-				    JSONObject json_obj = jarray.getJSONObject(0);
-				    
-				    String str_value=json_obj.getString("NUMREG");
-				    
-				    if(Integer.parseInt(str_value) >= 0){
-				    	this.connection = true;
-				    }else{
-				    	this.connection = false;
-				    }
-				    
-				} 
-				catch (ParseException e) {}
-				catch (IOException e) {} 
-				catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            } else {
-            	message = responseCode+": "+responseMessage;
-            	this.connection = false;
-            }
-            
-        	if(this.getConnection()){
-        		
-        		Toast.makeText(getApplicationContext(), R.string.service_connected , Toast.LENGTH_LONG).show();
-        		
-        	}else{
-        		
-        		Toast.makeText(getApplicationContext(), R.string.errorHTTP , Toast.LENGTH_LONG).show();
-        		openHomeActivity(null);
-        		
-        	}
-            
-        }
- 
-    }
+	
+	
+	@Override
+	public void onBackPressed() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		String server_url = prefs.getString("server_url", "");
+		String server_user = prefs.getString("server_user","");
+		String server_pass = prefs.getString("server_pass","");
+		url_query = server_url;
+		testConnection(null);
+		
+	}
+
+
+	@Override
+	public void onTaskCompleted() {
+		// TODO Auto-generated method stub
+		
+//Log.w("","actualizado : " + wsConection.getRecordsResult().toString());
+		
+		JSONArray jarrayResponse = wsConection.getRecordsResult();
+		Intent i;
+		JSONObject json_obj;
+		String str_value = "";
+		
+		switch (wsConection.getActionEnum()) {
+		case CONNECTION:
+					    
+		    if(wsConection.isConnected()){
+		    	
+				i = new Intent();
+				i.putExtra("resultMessage", getString(R.string.service_connected));
+		   		setResult(RESULT_OK, i);
+				super.onBackPressed();
+//		    	Toast.makeText(ModifyActivity.this, getString(R.string.query_updated), Toast.LENGTH_LONG).show();
+		    }else {
+		    	Toast.makeText(Prefs.this,getString(R.string.errorHTTP), Toast.LENGTH_LONG).show();
+//		    	Log.w("","Connection have gonne wrong...");
+		    }
+		    
+		    break;
+		default:
+			break;
+		
+		}
+		
+		
+	}
 	
 
 }

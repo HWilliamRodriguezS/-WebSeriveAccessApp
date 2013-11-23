@@ -25,7 +25,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 //import android.widget.Toast;
 
-public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse> {
+public class WSManager extends AsyncTask<BasicNameValuePair, Void, String> {
 	
 	private JSONArray recordsResult =  null;
 	private boolean connected = false;
@@ -50,7 +50,7 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 	}
 	
 	@Override
-	protected HttpResponse doInBackground(BasicNameValuePair... params) {
+	protected String doInBackground(BasicNameValuePair... params) {
 		HttpResponse response = null;
 		JSONObject jsonObj = new JSONObject();
     	
@@ -92,12 +92,34 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 	        
     	}catch(Exception e){
 	        Log.w("Error", "Error connection"+": "+e.toString());
+	        this.connected = false;
+	        this.cancel(true);
+	        
     	}    	
-        return response;
+       // return response;
+        
+        int responseCode = response.getStatusLine().getStatusCode();
+        String responseMessage = response.getStatusLine().getReasonPhrase();
+        HttpEntity entity = response.getEntity();
+        
+        String responseString = null;
+        
+        
+        try {
+			responseString = EntityUtils.toString(entity);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return responseString;
 	}
 
 	@Override
-	protected void onPostExecute(HttpResponse response) {
+	protected void onPostExecute(String response) { //e(HttpResponse response)
 		//super.onPostExecute(response);
 		
 		String message = "";
@@ -105,22 +127,31 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
         // dismiss the dialog once done
         pDialog.dismiss();
         
-        int responseCode = response.getStatusLine().getStatusCode();
-        String responseMessage = response.getStatusLine().getReasonPhrase();
+        if(response == null){
+        	listener.onTaskCompleted();
+        	return;
+        }
         
-        HttpEntity entity = response.getEntity();
+        int responseCode = 0;
+        String responseMessage = response;
         
-        if (entity != null) {
+//        int responseCode = response.getStatusLine().getStatusCode();
+//        String responseMessage = response.getStatusLine().getReasonPhrase();
+        
+ //       HttpEntity entity = response.getEntity();
+        
+        if (response != null) {
         	//InputStream is = entity.getContent();
             String responseString;
 			try {
 				
 				
-				responseString = EntityUtils.toString(entity);
-				message = responseString;
+				//responseString = EntityUtils.toString(entity);
+				//message = responseString;
+				message = responseMessage;
 				
 //				Log.w("","responseString : " + responseString);
-//				Log.w("","responseString : " + message);
+				Log.w("","responseString : " + message);
 				
 				JSONArray jarray = new JSONArray(message);
 				
@@ -139,7 +170,6 @@ public class WSManager extends AsyncTask<BasicNameValuePair, Void, HttpResponse>
 			    
 			} 
 			catch (ParseException e) {}
-			catch (IOException e) {} 
 			catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

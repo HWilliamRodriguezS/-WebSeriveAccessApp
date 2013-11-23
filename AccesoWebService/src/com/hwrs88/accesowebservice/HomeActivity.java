@@ -21,10 +21,12 @@ import org.json.JSONObject;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +47,7 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	private final int PREFERENCES_ACTIVITY = 5;
 
 	private ProgressDialog pDialog;
-	private static final String url_query = "http://miw29.calamar.eui.upm.es/webservice/";
+	private String url_query ;// = "http://miw29.calamar.eui.upm.es/webservice/";
 	private WSManager wsConection;
 	private WSActions wsAction;
 //	private View callerButton;
@@ -54,14 +56,15 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
-		// search = (Button) findViewById(R.id.search_button);
-		// add = (Button) findViewById(R.id.add_button);
-		// modify = (Button) findViewById(R.id.edit_button);
-		// delete = (Button) findViewById(R.id.delete_button);
-		// url_query =
-		// "http://demo.calamar.eui.upm.es/webservice/webService.query.php";
-
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		String server_url = prefs.getString("server_url", "");
+		String server_user = prefs.getString("server_user","");
+		String server_pass = prefs.getString("server_pass","");
+		url_query = server_url;
+		
+		
+		Log.w("","prefs_url :" + url_query);
 		this.wsAction = WSActions.CONNECTION;
 		this.callWS(null);
 	}
@@ -146,6 +149,7 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 		wsConection.setListener(this);
 		wsConection.setCurrentContext(HomeActivity.this);
 		wsConection.setUrlQuery(url_query);
+		Log.w("","prefs_url in callws :" + url_query);
 		wsConection.setProgressDialog(getString(R.string.progress_title));
 		
 		EditText etDni =  (EditText) findViewById(R.id.dni_search);
@@ -245,7 +249,6 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 			break;
 
 		case SEARCH:
-			
 			
 			try {
 				json_obj = wsConection.getRecordsResult().getJSONObject(0);
@@ -358,6 +361,7 @@ public class HomeActivity extends Activity implements OnTaskCompleted {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		switch (requestCode) {
+		case PREFERENCES_ACTIVITY:
 		case SEARCH_ACTIVITY:
 			if (resultCode == RESULT_OK) {
 				Bundle extras = data.getExtras();
